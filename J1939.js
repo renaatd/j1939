@@ -14,7 +14,7 @@ createApp({
     data() {
         return {
             inputType: 'hex',
-            inputString: '18DAF131',
+            inputString: '18FF1234',
 
             // CAN ID + components
             canId: 0,
