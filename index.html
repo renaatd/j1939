@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>J1939 decoder</title>
+  <link rel="stylesheet" type="text/css" href="main.min.css">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h2>Decode J1939 CAN IDs</h2>
+    <p>Decode a CAN ID in PS / PF / PGN / ...</p>
+    <div id="app">
+      <form @submit.prevent="">
+        <label for="inputType">CAN ID format:</label>
+        <select id="inputType" v-model="inputType">
+          <option value="hex">Hex</option>
+          <option value="dec">Decimal</option>
+        </select>
+
+        <label for="canId">CAN ID:</label>
+        <input id="canId" type="text" inputmode="text" v-model="inputString">
+      </form>
+
+      <div v-if="!isValid"><strong>Invalid input: {{ errorMessage }}</strong></div>
+      <div v-else>
+        <table class="striped-table">
+          <colgroup>
+            <col style="width: 50%;">
+            <col style="width: 25%;">
+            <col style="width: 25%;">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th class="text-right">Hex</th>
+              <th class="text-right">Dec</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CAN ID (29-bit)</td>
+              <td class="text-right">{{ formatHex(canId, 8) }}</td>
+              <td class="text-right">{{ formatDec(canId) }}</td>
+            </tr>
+            <tr>
+              <td>SA - source address (0-255)</td>
+              <td class="text-right">{{ formatHex(sourceAddress, 2) }}</td>
+              <td class="text-right">{{ formatDec(sourceAddress) }}</td>
+            </tr>
+            <tr>
+              <td>PS - PDU specific (0-255)</td>
+              <td class="text-right">{{ formatHex(pduSpecific, 2) }}</td>
+              <td class="text-right">{{ formatDec(pduSpecific) }}</td>
+            </tr>
+            <tr>
+              <td>PF - PDU format (0-255)</td>
+              <td class="text-right">{{ formatHex(pduFormat, 2) }}</td>
+              <td class="text-right">{{ formatDec(pduFormat) }}</td>
+            </tr>
+            <tr>
+                <td>DP - data page (0-1)</td>
+                <td class="text-right">{{ formatHex(dataPage, 1) }}</td>
+                <td class="text-right">{{ formatDec(dataPage) }}</td>
+            </tr>
+            <tr>
+                <td>R - reserved (0-1) - should be 0</td>
+                <td class="text-right">{{ formatHex(reserved, 1) }}</td>
+                <td class="text-right">{{ formatDec(reserved) }}</td>
+            </tr>
+            <tr>
+              <td>PRI - priority (0-7) - default: 3 for control messages, 6 for others</td>
+              <td class="text-right">{{ formatHex(priority, 1) }}</td>
+              <td class="text-right">{{ formatDec(priority) }}</td>
+            </tr>
+        </tbody>
+        </table>
+        <table class="striped-table">
+          <colgroup>
+            <col style="width: 50%;">
+            <col style="width: 25%;">
+            <col style="width: 25%;">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th class="text-right">Hex</th>
+              <th class="text-right">Dec</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+                <td>Communication mode - either direct or broadcast</td>
+                <td class="text-right"></td>
+                <td class="text-right">{{ communicationMode }}</td>
+            </tr>
+            <tr>
+                <td>Destination address (0-255) - 255 is the global destination address</td>
+                <td class="text-right">{{ formatHex(destinationAddress, 2) }}</td>
+                <td class="text-right">{{ formatDec(destinationAddress) }}</td>
+            </tr>
+            <tr>
+                <td>PGN - Parameter Group Number (0-262143)</td>
+                <td class="text-right">{{ formatHex(pgn, 6) }}</td>
+                <td class="text-right">{{ formatDec(pgn) }}</td>
+            </tr>
+            <tr>
+                <td>Proprietary - true if PGN is manufacturer-specific, PF = 239 for direct or 255 for broadcast</td>
+                <td class="text-right"></td>
+                <td class="text-right">{{ proprietary ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <td>Request - true if this is a request for a parameter group, PF = 234, DP = 0, R = 0</td>
+                <td class="text-right"></td>
+                <td class="text-right">{{ request ? 'Yes' : 'No' }}</td>
+            </tr>
+          </tbody>
+        </table>
+        
+      </div>
+    </div>
+
+    <br/>
+    <a href="https://github.com/renaatd/j1939">source code</a>
+  </div>
+  <script src="j1939.js"></script>
+</body>
+</html>
