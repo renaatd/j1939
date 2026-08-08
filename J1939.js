@@ -16,6 +16,7 @@ createApp({
             inputType: 'hex',
             inputString: '18DAF131',
 
+            // CAN ID + components
             canId: 0,
             sourceAddress: 0,
             pduSpecific: 0,
@@ -24,23 +25,31 @@ createApp({
             reserved: 0,
             priority: 0,
 
+            // Derived values
             communicationMode: '',
             destinationSpecific: false,
             destinationAddress: null,
             pgn: 0,
-            proprietary: false,
+            specialType: '',
+
             isValid: false,
             errorMessage: 'starting up',
         };
     },
     methods: {
         formatHex(value, length = 2) {
+            if (this.isValid === false) {
+                return '';
+            }
             if (typeof value !== 'number' || !Number.isFinite(value)) {
                 return '';
             }
-            return intToHexString(value, length);
+            return '0x' + intToHexString(value, length);
         },
         formatDec(value) {
+            if (this.isValid === false) {
+                return '';
+            }
             if (typeof value !== 'number' || !Number.isFinite(value)) {
                 return '';
             }
@@ -49,6 +58,10 @@ createApp({
         update(inputType, inputString) {
             this.isValid = false;
             this.errorMessage = 'Unknown error';
+
+            // numbers are automatically hidden when invalid, so we don't need to clear them. Strings must be cleared manually.
+            this.communicationMode = '';
+            this.specialType = '';
 
             const trimmed = inputString.replace(/\s/g, '');
 
@@ -91,8 +104,24 @@ createApp({
                 if (this.destinationSpecific) {
                     this.pgn &= 0x3FF00;
                 }
-                this.proprietary = this.pduFormat == 0xEF || this.pduFormat == 0xFF;
-                this.request = this.pgn == 0x00EA00;
+                this.specialType = '';
+                if (this.pgn == 0x00DA00 || this.pgn == 0x00DB00) {
+                    this.specialType = '(reserved for ISO 15765-2 (ISO TP)';
+                } else if (this.pgn == 0x00E800) {
+                    this.specialType = 'Acknowledge';
+                } else if (this.pgn == 0x00EA00) {
+                    this.specialType = 'Request';
+                } else if (this.pgn == 0x00EB00) {
+                    this.specialType = 'Transport Protocol (Data Transfer)';
+                } else if (this.pgn == 0x00EC00) {
+                    this.specialType = 'Transport Protocol (Connection Management)';
+                } else if (this.pgn == 0x00EE00) {
+                    this.specialType = 'Address claimed / cannot claim address';
+                } else if (this.pduFormat == 0xEF) {
+                    this.specialType = 'Proprietary A';
+                } else if (this.pduFormat == 0xFF) {
+                    this.specialType = 'Proprietary B';
+                }
                 this.isValid = true;
             } catch (error) {
                 if (error instanceof Error) {
