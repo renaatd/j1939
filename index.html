@@ -177,8 +177,29 @@
                     <td class="text-right">0</td>
                 </tr>
                 <tr>
+                    <td>DM1 (active diagnostic trouble codes)</td>
+                    <td class="text-right">0x00FECA</td>
+                    <td class="text-right">254</td>
+                    <td class="text-right">0</td>
+                    <td class="text-right">0</td>
+                </tr>
+                <tr>
+                    <td>DM2 (previously active diagnostic trouble codes)</td>
+                    <td class="text-right">0x00FECB</td>
+                    <td class="text-right">254</td>
+                    <td class="text-right">0</td>
+                    <td class="text-right">0</td>
+                </tr>
+                <tr>
+                    <td>DM3 (clear diagnostic data)</td>
+                    <td class="text-right">0x00FECC</td>
+                    <td class="text-right">254</td>
+                    <td class="text-right">0</td>
+                    <td class="text-right">0</td>
+                </tr>
+                <tr>
                     <td>Proprietary B, for manufacturer-specific use (broadcast)</td>
-                    <td class="text-right">0x00FF00 and 0x01FF00</td>
+                    <td class="text-right">0x00FF?? and 0x01FF??</td>
                     <td class="text-right">255</td>
                     <td class="text-right">-</td>
                     <td class="text-right">0</td>
@@ -194,8 +215,12 @@
             <dt>255</dt>
             <dd>global destination address, used to communicate with all devices on the network</dd>
         </dl>
-        <p>Reference: <a href="https://copperhilltech.com/a-comprehensible-guide-to-j1939/">"A comprehensible guide to
-                J1939", by Wilfried Voss</a></p>
+        <p><strong>References:</strong></p>
+        <ul>
+            <li><a href="https://copperhilltech.com/a-comprehensible-guide-to-j1939/">book/e-book "A comprehensible guide to J1939", by Wilfried Voss</a></li>
+            <li><a href="https://www.csselectronics.com/pages/j1939-pgn-conversion-tool">CSS Electronics PGN calculator</a></li>
+            <li><a href="https://github.com/DanielMartensson/Open-SAE-J1939/blob/main/Src/SAE_J1939/SAE_J1939_Enums/Enum_PGN.h">Open-SAE-J1939 PGN enums</a></li>
+        </ul>
         <p><a href="https://github.com/renaatd/j1939">source code</a></p>
     </div>
     <script src="J1939.js"></script>

@@ -105,22 +105,27 @@ createApp({
                     this.pgn &= 0x3FF00;
                 }
                 this.specialType = '';
-                if (this.pgn == 0x00DA00 || this.pgn == 0x00DB00) {
-                    this.specialType = '(reserved for ISO 15765-2 (ISO TP)';
-                } else if (this.pgn == 0x00E800) {
-                    this.specialType = 'Acknowledge';
-                } else if (this.pgn == 0x00EA00) {
-                    this.specialType = 'Request';
-                } else if (this.pgn == 0x00EB00) {
-                    this.specialType = 'Transport Protocol (Data Transfer)';
-                } else if (this.pgn == 0x00EC00) {
-                    this.specialType = 'Transport Protocol (Connection Management)';
-                } else if (this.pgn == 0x00EE00) {
-                    this.specialType = 'Address claimed / cannot claim address';
-                } else if (this.pduFormat == 0xEF) {
-                    this.specialType = 'Proprietary A';
-                } else if (this.pduFormat == 0xFF) {
+
+                const pgnTable = {
+                    0x00DA00: 'used for ISO 15765-2 (ISO TP)',
+                    0x00DB00: 'used for ISO 15765-2 (ISO TP)',
+                    0x00E800: 'Acknowledge',
+                    0x00EA00: 'Request',
+                    0x00EB00: 'Transport Protocol (Data Transfer)',
+                    0x00EC00: 'Transport Protocol (Connection Management)',
+                    0x00EE00: 'Address claimed / cannot claim address',
+                    0x00EF00: 'Proprietary A',
+                    0x00FECA: 'DM1 (active diagnostic trouble codes)',
+                    0x00FECB: 'DM2 (previously active diagnostic trouble codes)',
+                    0x00FECC: 'DM3 (clear diagnostic data)',
+                    0x01EF00: 'Proprietary A2',
+                };
+                if (pgnTable.hasOwnProperty(this.pgn)) {
+                    this.specialType = pgnTable[this.pgn];
+                } else if (this.pgn >= 0x00FF00 && this.pgn <= 0x00FFFF) {
                     this.specialType = 'Proprietary B';
+                } else if (this.pgn >= 0x01FF00 && this.pgn <= 0x01FFFF) {
+                    this.specialType = 'Proprietary B2';
                 }
                 this.isValid = true;
             } catch (error) {
