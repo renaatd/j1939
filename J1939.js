@@ -107,6 +107,8 @@ createApp({
                 this.specialType = '';
 
                 const pgnTable = {
+                    0x00C900: 'Request2',
+                    0x00CA00: 'Transfer',
                     0x00DA00: 'used for ISO 15765-2 (ISO TP)',
                     0x00DB00: 'used for ISO 15765-2 (ISO TP)',
                     0x00E800: 'Acknowledge',
@@ -125,7 +127,7 @@ createApp({
                 } else if (this.pgn >= 0x00FF00 && this.pgn <= 0x00FFFF) {
                     this.specialType = 'Proprietary B';
                 } else if (this.pgn >= 0x01FF00 && this.pgn <= 0x01FFFF) {
-                    this.specialType = 'Proprietary B2';
+                    this.specialType = 'Proprietary B2 (non-official)';
                 }
                 this.isValid = true;
             } catch (error) {
