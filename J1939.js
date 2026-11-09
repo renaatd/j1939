@@ -107,27 +107,29 @@ createApp({
                 this.specialType = '';
 
                 const pgnTable = {
-                    0x00C900: 'Request2',
-                    0x00CA00: 'Transfer',
+                    0x00C900: 'RQST2 Request2',
+                    0x00CA00: 'XFER Transfer',
                     0x00DA00: 'used for ISO 15765-2 (ISO TP)',
                     0x00DB00: 'used for ISO 15765-2 (ISO TP)',
-                    0x00E800: 'Acknowledge',
-                    0x00EA00: 'Request',
-                    0x00EB00: 'Transport Protocol (Data Transfer)',
-                    0x00EC00: 'Transport Protocol (Connection Management)',
-                    0x00EE00: 'Address claimed / cannot claim address',
-                    0x00EF00: 'Proprietary A',
+                    0x00E800: 'ACKM Acknowledgment Message',
+                    0x00EA00: 'RQST Request',
+                    0x00EB00: 'TP.DT Transport Protocol (Data Transfer)',
+                    0x00EC00: 'TP.CM Transport Protocol (Connection Management)',
+                    0x00EE00: 'AC Address claimed / cannot claim address',
+                    0x00EF00: 'PropA Proprietary A',
                     0x00FECA: 'DM1 (active diagnostic trouble codes)',
                     0x00FECB: 'DM2 (previously active diagnostic trouble codes)',
                     0x00FECC: 'DM3 (clear diagnostic data)',
-                    0x01EF00: 'Proprietary A2',
+                    0x00FEE6: 'DT time/date',
+                    0x00FEEC: 'VI vehicle identification',
+                    0x01EF00: 'PropA2 Proprietary A2',
                 };
                 if (pgnTable.hasOwnProperty(this.pgn)) {
                     this.specialType = pgnTable[this.pgn];
                 } else if (this.pgn >= 0x00FF00 && this.pgn <= 0x00FFFF) {
-                    this.specialType = 'Proprietary B';
+                    this.specialType = 'PropB Proprietary B';
                 } else if (this.pgn >= 0x01FF00 && this.pgn <= 0x01FFFF) {
-                    this.specialType = 'Proprietary B2 (non-official)';
+                    this.specialType = 'PropB2 Proprietary B2 (non-official)';
                 }
                 this.isValid = true;
             } catch (error) {
